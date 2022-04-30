@@ -55,10 +55,10 @@ def twitter_search(twitter_api, q, max_results=1000, **kw):
 def get_all_tweets():
     twitter_api = get_twitter_api()
     tweetStore = TweetStore()
-    q = "M1"
+    q = "(apple silicon) OR (apple M1) OR (mac M1) OR (M1 silicon) OR #applesilicon OR #macm1"
 
     # change this range to what you want. number of twweets fetched =  range * 300 and saved every loop into Tweetstore.
-    for _ in range(10):
+    for _ in range(50):
         max_id = tweetStore.getAllTweetsOffset()
         if(int(max_id) > 0):
             results, max_id = twitter_search(twitter_api, q, max_results=1000, max_id = max_id, lang='en')

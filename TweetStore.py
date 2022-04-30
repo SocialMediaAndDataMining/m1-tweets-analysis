@@ -13,7 +13,18 @@ class TweetStore:
         self.influencerFollowersCollection = db['influencer_followers']
 
     def getAllM1Tweets(self):
-        return self.allTweetsCollection.find({})
+        tweets = self.allTweetsCollection.find({})
+        only_tweets = []
+
+        for tweet in tweets:
+            new_tweet = {
+                'user_screen_name' : tweet['user']['screen_name'],
+                'user_id' : tweet['user']['id'],
+                'text' : tweet['text']
+            }
+            only_tweets.append(new_tweet)
+        
+        return only_tweets
 
     def saveAllM1Tweets(self, tweets):
         self.allTweetsCollection.insert_many(tweets)
