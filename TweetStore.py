@@ -49,4 +49,4 @@ class TweetStore:
 
     def saveInfluencerFollowersOffset(self, offset):
         dataToSave = {"_id": self.followersOffsetId, "offset": offset}
-        self.tweetsOffsetCollection.replace_one({"_id": self.allOffsetId}, dataToSave)
+        self.tweetsOffsetCollection.replace_one({"_id": self.followersOffsetId}, dataToSave)
