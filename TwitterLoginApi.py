@@ -7,10 +7,10 @@ def get_twitter_api():
     # See https://developer.twitter.com/en/docs/basics/authentication/overview/oauth
     # for more information on Twitter's OAuth implementation.
     
-    CONSUMER_KEY = ''
-    CONSUMER_SECRET = ''
-    OAUTH_TOKEN = ''
-    OAUTH_TOKEN_SECRET = ''
+    CONSUMER_KEY = 'rk58XIhnqTYdmSWpp19YLNwoU'
+    CONSUMER_SECRET = 'KHPUpfvGPHDreVDo7qNNwMI3ixmhKoN7dHaVq35qHlsVo23hWE'
+    OAUTH_TOKEN = '710852134229647360-NELjId5GR0TOgtCd1Mo0KDq6PozAw89'
+    OAUTH_TOKEN_SECRET = 'zmNW9jtrrlJ8AXjd4ClKKQFm8PpdgyiTVeNH5WeaG6q6r'
     
     auth = twitter.oauth.OAuth(OAUTH_TOKEN, OAUTH_TOKEN_SECRET,
                                CONSUMER_KEY, CONSUMER_SECRET)

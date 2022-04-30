@@ -58,7 +58,7 @@ def get_all_tweets():
     q = "M1"
 
     # change this range to what you want. number of twweets fetched =  range * 300 and saved every loop into Tweetstore.
-    for _ in range(10):
+    for _ in range(50):
         max_id = tweetStore.getAllTweetsOffset()
         if(int(max_id) > 0):
             results, max_id = twitter_search(twitter_api, q, max_results=1000, max_id = max_id, lang='en')
