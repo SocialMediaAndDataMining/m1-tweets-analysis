@@ -64,7 +64,7 @@ def read_txt(txtfile):
     return df
 
 plt.rcParams['font.size'] = 10  # Set the font size for all plots
-test_df = read_csv_file('allTextContent.csv', 2)
+test_df = read_csv_file('allM1Tweets.csv', 2)
 df_text = []
 for i in test_df:
     df_text.append(i[2])
