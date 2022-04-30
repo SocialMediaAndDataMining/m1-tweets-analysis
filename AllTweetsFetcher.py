@@ -1,13 +1,12 @@
+from sklearn.linear_model import TweedieRegressor
 import twitter
+import json
+from urllib.parse import unquote
 from TwitterLoginApi import get_twitter_api
+from TweetStore import TweetStore
 
 
-# ## Example 4. Searching for tweets
-
-# In[8]:
-
-
-def twitter_search(twitter_api, q, max_results=200, **kw):
+def twitter_search(twitter_api, q, max_results=1000, **kw):
 
     # See https://developer.twitter.com/en/docs/tweets/search/api-reference/get-search-tweets
     # and https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators
@@ -15,8 +14,7 @@ def twitter_search(twitter_api, q, max_results=200, **kw):
     # keyword arguments
     
     # See https://dev.twitter.com/docs/api/1.1/get/search/tweets    
-    search_results = twitter_api.search.tweets(q=q, count=100, **kw)
-    
+    search_results = twitter_api.search.tweets(q=q, count=500, **kw)
     statuses = search_results['statuses']
     
     # Iterate through batches of results by following the cursor until we
@@ -29,9 +27,12 @@ def twitter_search(twitter_api, q, max_results=200, **kw):
     # Enforce a reasonable limit
     max_results = min(1000, max_results)
     
-    for _ in range(10): # 10*100 = 1000
+    kwargs = dict([ kv.split('=') for kv in unquote(search_results['search_metadata']['next_results'][1:]).split("&") ])
+    cursor = kwargs['max_id']
+    for _ in range(2): # 10*100 = 1000
         try:
             next_results = search_results['search_metadata']['next_results']
+            
         except KeyError as e: # No more results when next_results doesn't exist
             break
             
@@ -41,18 +42,35 @@ def twitter_search(twitter_api, q, max_results=200, **kw):
         
         search_results = twitter_api.search.tweets(**kwargs)
         statuses += search_results['statuses']
-        
+        cursor = kwargs['max_id']
+        print("len(statuses) - ",len(statuses))
         if len(statuses) >= max_results: 
             break
             
-    return statuses
+    return statuses, cursor
 
 # Sample usage
 
-twitter_api = get_twitter_api()
 
-q = "CrossFit"
-results = twitter_search(twitter_api, q, max_results=10)
-        
-# Show one sample search result by slicing the list...
-print(json.dumps(results[0], indent=1))
+def get_all_tweets():
+    twitter_api = get_twitter_api()
+    tweetStore = TweetStore()
+    q = "(apple silicon) OR (apple M1) OR (mac M1) OR (M1 silicon) OR #applesilicon OR #macm1"
+
+    # change this range to what you want. number of twweets fetched =  range * 300 and saved every loop into Tweetstore.
+    for _ in range(50):
+        max_id = tweetStore.getAllTweetsOffset()
+        if(int(max_id) > 0):
+            results, max_id = twitter_search(twitter_api, q, max_results=1000, max_id = max_id, lang='en')
+        else:
+            results, max_id = twitter_search(twitter_api, q, max_results=1000, lang='en')
+
+        #save into db
+        tweetStore.saveAllTweetsOffset(max_id)
+        tweetStore.saveAllM1Tweets(results)
+
+    # Show one sample search result by slicing the list...
+    print("Offset is  -",max_id)
+
+
+get_all_tweets()
