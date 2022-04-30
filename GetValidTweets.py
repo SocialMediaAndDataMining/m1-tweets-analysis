@@ -3,93 +3,67 @@ from tweepy import API
 from tweepy import Cursor
 from datetime import datetime, date, time, timedelta
 import pytz
+#from TweetStore import *
 
 # login
 
 
 def oauth_login():
-    CONSUMER_KEY = ''
-    CONSUMER_SECRET = ''
-    OAUTH_TOKEN = ''
-    OAUTH_TOKEN_SECRET = ''
+    CONSUMER_KEY = '7MW0Wht4XDKD9XmsdYLMR8rW7'
+    CONSUMER_SECRET = 'B7ZLnIwE2Bhzt2AJQWtcL2vQ2UJ7oYYqIHIIqDsi22tN1ALnyH'
+    OAUTH_TOKEN = '792786443051601921-yQWxJALbBGIThpOnfvZKXz9ga5jjN6k'
+    OAUTH_TOKEN_SECRET = 'uLDDvVliEcTdct8g6TmdtLNT7PzaJjDMLpuHZYpcPdbx1'
 
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
     return API(auth)
 
-    # use userName to get user's
-    '''https://www.geeksforgeeks.org/python-api-get_user-in-tweepy/
-    screen_name : specifies the screen name of the user, useful to differentiate accounts when a valid screen name is also a user ID
-    Returns : an object of the class User'''
-
 
 def get_user_info(auth_api, user_id):
     user_info = auth_api.get_user(user_id=user_id)
-    #print("user ID: "+str(user_info.id))
+    # print("user ID: "+str(user_info.id))
     return user_info
 
 
-def print_user_info(user_info):
-    print("user_id: " + str(user_info.id))
-    print("name: " + user_info.name)
-    print("screen_name: " + user_info.screen_name)
-    print("description: " + user_info.description)
-    print("created_date: " + str(user_info.created_at))
-    print("statuses_count: " + str(user_info.statuses_count))
-    print("friends_count: " + str(user_info.friends_count))
-    print("followers_count: " + str(user_info.followers_count))
-    print("total tweets: " + str(user_info.statuses_count))
-
-    print()
-
-    account_created_date = user_info.created_at
-    delta = datetime.now(pytz.utc) - account_created_date
-
-    account_age_days = delta.days
-    print("Account age (in days): " + str(account_age_days))
-
-    if account_age_days > 0:
-        print("Average tweets per day: " + "%.2f" %
-              (float(user_info.statuses_count) / float(account_age_days)))
-
-    print()
-
-# Cursor Tutorial: https://docs.tweepy.org/en/v3.5.0/cursor_tutorial.html
-
-
-
-
-def find_user_post_hashtag(auth_api, screen_name, start_date, htag,user_id):
-    userID_tweet = []
+# filter tweets by substring in string
+def filter_tweets1(auth_api, screen_name, start_date, hashtag, valid_tweets):
     for status in Cursor(auth_api.user_timeline, screen_name=screen_name).items():
         # print(str(status))
         if hasattr(status, "text"):
             tweet_body = status.text
-            for word in tweet_body.split():
-                if word == htag:
-                    userID_tweet=[]
-                    userID_tweet.append(user_id)
-                    userID_tweet.append(tweet_body)
-                    if len(userID_tweet) > 1:
-                        print("user ID: "+str(userID_tweet[0]))
-                        print("valid tweet: "+str(userID_tweet[1]))
-                        return len(userID_tweet) > 0, userID_tweet
+            tweet_body_lower = tweet_body.lower()
+            if hashtag in tweet_body_lower:
+                valid_tweets.append(tweet_body)
+                print("valid tweet: " + str(tweet_body))
 
         if status.created_at < start_date:
             break
 
-    print()
-    print(str(len(userID_tweet)) + " tweets found with hashtag: " + htag)
-    print()
-
-    return len(userID_tweet) > 0, userID_tweet
+# filter tweets by spliting string into words
 
 
-def get_valid_tweets_from_userids(followers_ids, hashtag, all_userID_tweet):
+def filter_tweets2(auth_api, screen_name, start_date, hashtag, valid_tweets):
+    for status in Cursor(auth_api.user_timeline, screen_name=screen_name).items():
+        # print(str(status))
+        if hasattr(status, "text"):
+            tweet_body = status.text
+            tweet_body_lower = tweet_body.lower()
+            words_in_tweet = tweet_body_lower.split()
+            for word in words_in_tweet:
+                if hashtag == word:
+                    valid_tweets.append(tweet_body)
+                    print("valid tweet: " + str(tweet_body))
 
+        if status.created_at < start_date:
+            break
+
+
+def get_valid_tweets(hashtag):
     au_api = oauth_login()
-
+    valid_tweets = []
+    #followers_ids = TweetStore.getInfluencerFollowers()
+    followers_ids = {"189311978"}
     for follower_id in followers_ids:
         user = get_user_info(au_api, follower_id)
         name = user.screen_name
@@ -97,64 +71,21 @@ def get_valid_tweets_from_userids(followers_ids, hashtag, all_userID_tweet):
         start_date = user.created_at
         #start_date = datetime.now(pytz.utc) - timedelta(days=30)
 
-        found, userID_tweet = find_user_post_hashtag(au_api, name, start_date, hashtag, follower_id)
+        # filter_tweets1: less time, filter tweets by matching substring in string
+        # filter_tweets2: more time, filter tweets by spliting string into words, then match
+        filter_tweets2(au_api, name, start_date,
+                       hashtag, valid_tweets)
 
-        if found:
-            all_userID_tweet.append(userID_tweet)
-
-
-
-''':parameter
-       influencer_name: screen_name of the chosen influencer
-       followers_limit: least number of tweets required for future analysis
-       first_load_limit: number of follower IDs loaded for the first time
-       reload_limit: number of followers IDs loaded for each time if the first loading did not get enough valid tweets
-    output
-        all_userID_tweet: list of pair<user ID, valid tweet>
-        '''
-'''def get_valid_tweets(influencer_name,followers_limit, first_load_limit, reload_limit, hashtag):
-    au_api = oauth_login()
-
-    #first-time get follower IDs
-    t_cursor, t_followers_ids=get_followers_ids(au_api, screen_name=influencer_name, followers_limit=first_load_limit)
-    all_userID_tweet = []
-    get_valid_tweets_from_userids(t_followers_ids, hashtag, all_userID_tweet)
-
-    while len(all_userID_tweet) < followers_limit:
-        cursor, followers_ids = get_followers_ids(au_api, screen_name=influencer_name, followers_limit=reload_limit,t_cursor)
-        get_valid_tweets_from_userids(followers_ids, hashtag, all_userID_tweet)
-        t_cursor=cursor
-
-    return all_userID_tweet'''
-
-def get_valid_tweets_test(influencer_name,followers_limit, first_load_limit, reload_limit, hashtag):
-    au_api = oauth_login()
-
-    #first-time get follower IDs
-    t_followers_ids=["189311978", "189311978"]
-    all_userID_tweet = []
-    get_valid_tweets_from_userids(t_followers_ids, hashtag, all_userID_tweet)
-
-    '''while len(all_userID_tweet) < followers_limit:
-        cursor, followers_ids = get_followers_ids(au_api, screen_name=influencer_name, followers_limit=reload_limit,t_cursor)
-        get_valid_tweets_from_userids(followers_ids, hashtag, all_userID_tweet)
-        t_cursor=cursor'''
-    for userID_tweet in all_userID_tweet:
-        print("follower ID: ", userID_tweet[0])
-        print("tweet: ", userID_tweet[1])
-        print()
-    return all_userID_tweet
+    # TweetStore.saveInfluencerM1Tweets(valid_tweets)
+    print(str(len(valid_tweets))+" valid tweets have been added to database.")
 
 
-def main():
+if __name__ == '__main__':
     '''
     #name = "Edmundyu1995"
     #userID = "189311978"
     followers_ids=["189311978", "189311978"]
-    htag = "sigalaandbeckycollab"
-
-    get_valid_tweets_from_userids(followers_ids, htag, all_userID_tweet)'''
-    get_valid_tweets_test("katyperry", 1000, 100000, 5000, "Becky")
-
-if __name__ == '__main__':
-    main()
+    '''
+    # please enter a keyword in lowercase
+    htag = "apple"
+    get_valid_tweets(htag)
