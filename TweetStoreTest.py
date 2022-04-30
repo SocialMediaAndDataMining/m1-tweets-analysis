@@ -22,7 +22,7 @@ if __name__ == "__main__":
     for tweet in allM1Tweets:
         print(tweet)
     
-    tweetStore.saveAllTweetsOffset("1")
+    #tweetStore.saveAllTweetsOffset("1")
 
     print("All tweet offset- ")
-    print(tweetStore.getAllTweetsOffset()[0])
+    print(tweetStore.getAllTweetsOffset())

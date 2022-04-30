@@ -19,7 +19,7 @@ class TweetStore:
         self.allTweetsCollection.insert_many(tweets)
 
     def getAllTweetsOffset(self):
-        return self.tweetsOffsetCollection.find({"_id": self.allOffsetId})
+        return self.tweetsOffsetCollection.find_one({"_id": self.allOffsetId})['offset']
 
     def saveAllTweetsOffset(self, offset):
         dataToSave = {"_id": self.allOffsetId, "offset": offset}
@@ -32,7 +32,7 @@ class TweetStore:
         self.influencerTweetsCollection.insert_many(tweets)
 
     def getInfluencerTweetsOffset(self):
-        return self.tweetsOffsetCollection.find({"_id": self.influencerOffsetId})
+        return self.tweetsOffsetCollection.find_one({"_id": self.influencerOffsetId})['offset']
 
     def saveInfluencerTweetsOffset(self, offset):
         dataToSave = {"_id": self.influencerOffsetId, "offset": offset}
@@ -45,7 +45,7 @@ class TweetStore:
         self.influencerFollowersCollection.insert_many(tweets)
 
     def getInfluencerFollowersOffset(self):
-        return self.tweetsOffsetCollection.find({"_id": self.followersOffsetId})
+        return self.tweetsOffsetCollection.find_one({"_id": self.followersOffsetId})['offset']
 
     def saveInfluencerFollowersOffset(self, offset):
         dataToSave = {"_id": self.followersOffsetId, "offset": offset}
