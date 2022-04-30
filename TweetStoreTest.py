@@ -17,12 +17,12 @@ This python file shows the usage of the TweetStore.
 if __name__ == "__main__":
     tweetStore = TweetStore()
 
-    allM1Tweets = tweetStore.getAllM1Tweets()
-    print("All M1 Tweets - ")
-    for tweet in allM1Tweets:
-        print(tweet)
+    # allM1Tweets = tweetStore.getAllM1Tweets()
+    # print("All M1 Tweets - ")
+    # for tweet in allM1Tweets:
+    #     print(tweet)
     
     #tweetStore.saveAllTweetsOffset("1")
 
     print("All tweet offset- ")
-    print(tweetStore.getAllTweetsOffset())
+    print(tweetStore.getAllM1Tweets()[0])
