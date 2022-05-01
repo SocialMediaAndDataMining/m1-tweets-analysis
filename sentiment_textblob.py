@@ -2,6 +2,8 @@ import pandas as pd
 from matplotlib import dates as mdate
 from matplotlib import ticker
 from datetime import datetime as dt
+from TweetStore import TweetStore
+from TweetStore import TweetStore
 import preprocessor as p
 from textblob import TextBlob
 from matplotlib import pyplot as plt
@@ -62,7 +64,7 @@ def read_txt(txtfile):
     return df
 
 plt.rcParams['font.size'] = 10  # Set the font size for all plots
-test_df = read_csv_file('p10.csv', 2)
+test_df = read_csv_file('allM1Tweets.csv', 2)
 df_text = []
 for i in test_df:
     df_text.append(i[2])
@@ -73,5 +75,7 @@ time2 = time.perf_counter()
 plt.show()
 run_time = time2 - time1
 print('Run time using TextBlob: ', run_time)
+
+print(TweetStore.getAllM1Tweets())
 
 
