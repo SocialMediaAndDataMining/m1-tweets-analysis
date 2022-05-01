@@ -86,12 +86,14 @@ def get_valid_tweets(hashtag):
     au_api = oauth_login()
     valid_tweets = []
     tweetStore = TweetStore()
-    limit = 10
+    limit = 30
     offset = int(tweetStore.getInfluencerTweetsOffset())
-    followers_ids = tweetStore.getInfluencerFollowers()[offset:limit]
+    followers_ids = tweetStore.getInfluencerFollowers()[offset:offset + limit]
 
+    count = 0
     #followers_ids = {"189311978"}
     for follower_id in followers_ids:
+        count = count + 1
         user = get_user_info(au_api, str(follower_id['_id']))
         name = user.screen_name
 
@@ -102,12 +104,14 @@ def get_valid_tweets(hashtag):
         # filter_tweets2: more time, filter tweets by spliting string into words, then match
         filter_tweets1(au_api, name, user.id, start_date, valid_tweets)
 
-    print(valid_tweets)
-
-    tweetStore.saveInfluencerM1Tweets(valid_tweets)
-    tweetStore.saveInfluencerTweetsOffset(limit + offset)
-    print(str(len(valid_tweets))+" valid tweets have been added to database.")
-
+        if count >= 10:
+            tweetStore.saveInfluencerM1Tweets(valid_tweets)
+            offset = offset + count
+            tweetStore.saveInfluencerTweetsOffset(offset)
+            print(str(len(valid_tweets))+" valid tweets have been added to database.")
+            print(valid_tweets)
+            valid_tweets = []
+            count = 0
 
 if __name__ == '__main__':
     '''
