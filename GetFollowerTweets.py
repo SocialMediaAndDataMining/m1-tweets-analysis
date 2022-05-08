@@ -107,7 +107,8 @@ def get_valid_tweets_for_followers():
         filter_tweets1(au_api, name, user.id, start_date, valid_tweets)
 
         if count >= 10:
-            tweetStore.saveInfluencerM1Tweets(valid_tweets)
+            if(len(valid_tweets) > 0):
+                tweetStore.saveInfluencerM1Tweets(valid_tweets)
             offset = offset + count
             tweetStore.saveInfluencerTweetsOffset(offset)
             print(str(len(valid_tweets))+" valid tweets have been added to database.")
