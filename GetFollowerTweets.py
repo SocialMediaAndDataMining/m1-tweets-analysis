@@ -6,6 +6,8 @@ import pytz
 from TweetStore import *
 from datetime import datetime
 from datetime import timedelta
+import sys
+import time
 
 # login
 
@@ -68,6 +70,7 @@ def filter_tweets1(auth_api, screen_name, userId, start_date, valid_tweets):
     except Exception as e:
         if(e.response.status_code == 429):
             print("Too many request to twitter api. Going to sleep and trying after 15 mins. After - ", str(datetime.now() + timedelta(minutes=15)))
+            print("zzz...zzz....")
             sys.stderr.flush()
             time.sleep(60*15 + 5)
         if hasattr(e, 'message'):
