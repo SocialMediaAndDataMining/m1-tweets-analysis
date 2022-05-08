@@ -69,10 +69,7 @@ def filter_tweets1(auth_api, screen_name, userId, start_date, valid_tweets):
                 break
     except Exception as e:
         if(e.response.status_code == 429):
-            print("Too many request to twitter api. Going to sleep and trying after 15 mins. After - ", str(datetime.now() + timedelta(minutes=15)))
-            print("zzz...zzz....")
-            sys.stderr.flush()
-            time.sleep(60*15 + 5)
+            print("Too many request to twitter api. Try after 15 mins. After - ", str(datetime.now() + timedelta(minutes=15)))
         if hasattr(e, 'message'):
             print(e.message)
         else:
@@ -119,7 +116,7 @@ def get_valid_tweets_for_followers():
         # filter_tweets2: more time, filter tweets by spliting string into words, then match
         filter_tweets1(au_api, name, user.id, start_date, valid_tweets)
 
-        if count >= 10:
+        if count >= 1:
             if(len(valid_tweets) > 0):
                 tweetStore.saveInfluencerM1Tweets(valid_tweets)
             offset = offset + count
