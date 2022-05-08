@@ -14,8 +14,8 @@ print("Number of followers' tweets about M1 ", tweetsResult.shape[0])
 # ['Unnamed: 0', 'text', 'polarity', 'user_id', 'user_name']
 
 # Mapping the user_id to an opinion
-follower_ids = tweetsResult['user_id']
-follower_opinions = tweetsResult['polarity']
+follower_ids = tweetsResult['user_id'][:20]
+follower_opinions = tweetsResult['polarity'][:20]
 ids_ops = dict(zip(follower_ids, follower_opinions))
 
 
@@ -53,3 +53,4 @@ for node in G:
 
 nx.draw(G, node_color=color_map, with_labels=False)
 plt.show()
+plt.savefig("influencer_graph.png")
