@@ -4,6 +4,8 @@ from tweepy import Cursor
 from datetime import datetime, date, time, timedelta
 import pytz
 from TweetStore import *
+from datetime import datetime
+from datetime import timedelta
 
 # login
 
@@ -63,7 +65,14 @@ def filter_tweets1(auth_api, screen_name, userId, start_date, valid_tweets):
 
             if status.created_at < start_date:
                 break
-    except:
+    except Exception as e:
+        if(e.response.status_code == 429):
+            print("Too many request to twitter api. Try after 15 mins. After - ", str(datetime.now() + timedelta(minutes=15)))
+            exit()
+        if hasattr(e, 'message'):
+            print(e.message)
+        else:
+            print(e)
         return
 # filter tweets by spliting string into words
 
@@ -88,7 +97,7 @@ def get_valid_tweets_for_followers():
     au_api = oauth_login()
     valid_tweets = []
     tweetStore = TweetStore()
-    limit = 50
+    limit = 100
     offset = int(tweetStore.getInfluencerTweetsOffset())
     followers_ids = tweetStore.getInfluencerFollowers()[offset:offset + limit]
 
