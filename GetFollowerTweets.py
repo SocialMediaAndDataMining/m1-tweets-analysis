@@ -159,7 +159,7 @@ def get_valid_tweets_for_followers1000():
             valid_tweets = []
             count = 0
 
-def get_valid_tweets_for_followers():
+def get_valid_tweets_for_followers2000():
     au_api = oauth_login()
     valid_tweets = []
     tweetStore = TweetStore()
@@ -195,7 +195,7 @@ if __name__ == '__main__':
     #get_valid_tweets_for_followers()
 
     # Yuhui and Jiarui
-    #get_valid_tweets_for_followers1000()
+    get_valid_tweets_for_followers1000()
 
     # Kris and Tian
     #get_valid_tweets_for_followers2000()
