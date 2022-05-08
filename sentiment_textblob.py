@@ -34,10 +34,9 @@ def sentiment_pie(df_text, title): #analysis the tweet and plot the result
                 neg += 1
     piechart(pos, neu, neg, title)
 
-def read_csv_file(file_name, date_index): #Read csv file, store everything in a new list, and sort by date
+def read_csv_file(file_name, date_index): #Read csv file
                                           #param file_name: csv file name
-                                          #param date_index: The column number of date
-                                          #return: information in csv file sorted by date
+                                          #return: information in csv file
     with open(file_name, encoding='utf8')as f:
         f_csv = csv.reader(f)
         data = []
@@ -63,7 +62,7 @@ def read_txt(txtfile):
             x = ''
     return df
 
-plt.rcParams['font.size'] = 10  # Set the font size for all plots
+plt.rcParams['font.size'] = 10  #Set the font size for all plots
 test_df = read_csv_file('allM1Tweets.csv', 2)
 df_text = []
 for i in test_df:
