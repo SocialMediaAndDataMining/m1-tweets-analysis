@@ -70,6 +70,7 @@ def filter_tweets1(auth_api, screen_name, userId, start_date, valid_tweets):
     except Exception as e:
         if(e.response.status_code == 429):
             print("Too many request to twitter api. Try after 15 mins. After - ", str(datetime.now() + timedelta(minutes=15)))
+            exit()
         if hasattr(e, 'message'):
             print(e.message)
         else:
