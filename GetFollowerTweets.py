@@ -9,10 +9,10 @@ from TweetStore import *
 
 
 def oauth_login():
-    CONSUMER_KEY = '7MW0Wht4XDKD9XmsdYLMR8rW7'
-    CONSUMER_SECRET = 'B7ZLnIwE2Bhzt2AJQWtcL2vQ2UJ7oYYqIHIIqDsi22tN1ALnyH'
-    OAUTH_TOKEN = '792786443051601921-yQWxJALbBGIThpOnfvZKXz9ga5jjN6k'
-    OAUTH_TOKEN_SECRET = 'uLDDvVliEcTdct8g6TmdtLNT7PzaJjDMLpuHZYpcPdbx1'
+    CONSUMER_KEY = 'mYdfcMZDJIpEE5cvstEEo4Ygv'
+    CONSUMER_SECRET = 'ZLkfq36c7d97ea7kTs4uX9DMpplDpx7vo6Dyig9AxSpBzMgLtn'
+    OAUTH_TOKEN = '1503535128601153538-49IJXG0mwZry9QPCdNavYPqVDkuvRc'
+    OAUTH_TOKEN_SECRET = 'n48tUKo0I7gG1IvfmlwUWfBGKcr3JQIDPwLyqOwjopOov'
 
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
@@ -82,11 +82,11 @@ def filter_tweets2(auth_api, screen_name, start_date, hashtag, valid_tweets):
             break
 
 
-def get_valid_tweets(hashtag):
+def get_valid_tweets_for_followers():
     au_api = oauth_login()
     valid_tweets = []
     tweetStore = TweetStore()
-    limit = 30
+    limit = 10
     offset = int(tweetStore.getInfluencerTweetsOffset())
     followers_ids = tweetStore.getInfluencerFollowers()[offset:offset + limit]
 
@@ -121,4 +121,4 @@ if __name__ == '__main__':
     '''
     # please enter a keyword in lowercase
     htag = "apple"
-    get_valid_tweets(htag)
+    get_valid_tweets_for_followers()
