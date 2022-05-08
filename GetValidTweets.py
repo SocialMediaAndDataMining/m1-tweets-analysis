@@ -3,7 +3,7 @@ from tweepy import API
 from tweepy import Cursor
 from datetime import datetime, date, time, timedelta
 import pytz
-#from TweetStore import *
+from TweetStore import *
 
 # login
 
@@ -27,15 +27,38 @@ def get_user_info(auth_api, user_id):
 
 
 # filter tweets by substring in string
-def filter_tweets1(auth_api, screen_name, start_date, hashtag, valid_tweets):
+def filter_tweets1(auth_api, screen_name, userId, start_date, valid_tweets):
     for status in Cursor(auth_api.user_timeline, screen_name=screen_name).items():
         # print(str(status))
+        valid_tweet = {
+            'user_id': userId,
+            'user_screen_name': screen_name
+        }
         if hasattr(status, "text"):
             tweet_body = status.text
             tweet_body_lower = tweet_body.lower()
-            if hashtag in tweet_body_lower:
-                valid_tweets.append(tweet_body)
-                print("valid tweet: " + str(tweet_body))
+            if "apple" in tweet_body_lower:
+                if "silicon" in tweet_body_lower:
+                    valid_tweet['text'] = tweet_body
+                    valid_tweets.append(valid_tweet)
+                    print("valid tweet: " + str(tweet_body))
+                    break
+                elif "m1" in tweet_body_lower:
+                    valid_tweet['text'] = tweet_body
+                    valid_tweets.append(valid_tweet)
+                    print("valid tweet: " + str(tweet_body))
+                    break
+            if "m1" in tweet_body_lower:
+                if "silicon" in tweet_body_lower:
+                    valid_tweet['text'] = tweet_body
+                    valid_tweets.append(valid_tweet)
+                    print("valid tweet: " + str(tweet_body))
+                    break
+                elif "mac" in tweet_body_lower:
+                    valid_tweet['text'] = tweet_body
+                    valid_tweets.append(valid_tweet)
+                    print("valid tweet: " + str(tweet_body))
+                    break
 
         if status.created_at < start_date:
             break
@@ -53,7 +76,7 @@ def filter_tweets2(auth_api, screen_name, start_date, hashtag, valid_tweets):
             for word in words_in_tweet:
                 if hashtag == word:
                     valid_tweets.append(tweet_body)
-                    print("valid tweet: " + str(tweet_body))
+                    print("valid tweet first: " + str(tweet_body))
 
         if status.created_at < start_date:
             break
@@ -62,10 +85,16 @@ def filter_tweets2(auth_api, screen_name, start_date, hashtag, valid_tweets):
 def get_valid_tweets(hashtag):
     au_api = oauth_login()
     valid_tweets = []
-    #followers_ids = TweetStore.getInfluencerFollowers()
-    followers_ids = {"189311978"}
+    tweetStore = TweetStore()
+    limit = 30
+    offset = int(tweetStore.getInfluencerTweetsOffset())
+    followers_ids = tweetStore.getInfluencerFollowers()[offset:offset + limit]
+
+    count = 0
+    #followers_ids = {"189311978"}
     for follower_id in followers_ids:
-        user = get_user_info(au_api, follower_id)
+        count = count + 1
+        user = get_user_info(au_api, str(follower_id['_id']))
         name = user.screen_name
 
         start_date = user.created_at
@@ -73,12 +102,16 @@ def get_valid_tweets(hashtag):
 
         # filter_tweets1: less time, filter tweets by matching substring in string
         # filter_tweets2: more time, filter tweets by spliting string into words, then match
-        filter_tweets2(au_api, name, start_date,
-                       hashtag, valid_tweets)
+        filter_tweets1(au_api, name, user.id, start_date, valid_tweets)
 
-    # TweetStore.saveInfluencerM1Tweets(valid_tweets)
-    print(str(len(valid_tweets))+" valid tweets have been added to database.")
-
+        if count >= 10:
+            tweetStore.saveInfluencerM1Tweets(valid_tweets)
+            offset = offset + count
+            tweetStore.saveInfluencerTweetsOffset(offset)
+            print(str(len(valid_tweets))+" valid tweets have been added to database.")
+            print(valid_tweets)
+            valid_tweets = []
+            count = 0
 
 if __name__ == '__main__':
     '''

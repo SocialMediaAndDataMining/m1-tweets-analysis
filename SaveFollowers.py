@@ -15,7 +15,7 @@ for idx in range(0, 5):
    #
 
     # Get a list of follower ids and next cursor value (offset)
-    next_followers_cursor, followers_ids = get_followers_ids(twitter_api, screen_name="katyperry",
+    next_followers_cursor, followers_ids = get_followers_ids(twitter_api, screen_name="DriftingRuby",
                                  followers_limit=5000, cursor=followers_offset)
 
     # Save followers offset into database
