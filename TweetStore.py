@@ -4,6 +4,9 @@ class TweetStore:
     allOffsetId = "ALL_TWEETS"
     influencerOffsetId = "INFLUENCER_TWEETS"
     followersOffsetId = "INFLUENCER_FOLLOWERS"
+    followersOffsetId1000 = "INFLUENCER_FOLLOWERS1000"
+    followersOffsetId2000 = "INFLUENCER_FOLLOWERS2000"
+
     def __init__(self):
         client = pymongo.MongoClient("mongodb+srv://smdm:8udib9AXCH7-xR3@cluster0.heice.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
         db = client['M1_analysis']
@@ -72,3 +75,17 @@ class TweetStore:
     def saveInfluencerFollowersOffset(self, offset):
         dataToSave = {"_id": self.followersOffsetId, "offset": offset}
         self.tweetsOffsetCollection.replace_one({"_id": self.followersOffsetId}, dataToSave)
+
+    def getInfluencerFollowersOffset1000(self):
+        return self.tweetsOffsetCollection.find_one({"_id": self.followersOffsetId1000})['offset']
+
+    def saveInfluencerFollowersOffset1000(self, offset):
+        dataToSave = {"_id": self.followersOffsetId, "offset": offset}
+        self.tweetsOffsetCollection.replace_one({"_id": self.followersOffsetId1000}, dataToSave)
+
+    def getInfluencerFollowersOffset2000(self):
+        return self.tweetsOffsetCollection.find_one({"_id": self.followersOffsetId2000})['offset']
+
+    def saveInfluencerFollowersOffset2000(self, offset):
+        dataToSave = {"_id": self.followersOffsetId, "offset": offset}
+        self.tweetsOffsetCollection.replace_one({"_id": self.followersOffsetId2000}, dataToSave)

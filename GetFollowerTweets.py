@@ -127,5 +127,75 @@ def get_valid_tweets_for_followers():
             valid_tweets = []
             count = 0
 
+def get_valid_tweets_for_followers1000():
+    au_api = oauth_login()
+    valid_tweets = []
+    tweetStore = TweetStore()
+    limit = 100
+    offset = int(tweetStore.getInfluencerTweetsOffset1000())
+    followers_ids = tweetStore.getInfluencerFollowers()[offset:offset + limit]
+
+    count = 0
+    #followers_ids = {"189311978"}
+    for follower_id in followers_ids:
+        count = count + 1
+        user = get_user_info(au_api, str(follower_id['_id']))
+        name = user.screen_name
+
+        start_date = user.created_at
+        #start_date = datetime.now(pytz.utc) - timedelta(days=30)
+
+        # filter_tweets1: less time, filter tweets by matching substring in string
+        # filter_tweets2: more time, filter tweets by spliting string into words, then match
+        filter_tweets1(au_api, name, user.id, start_date, valid_tweets)
+
+        if count >= 1:
+            if(len(valid_tweets) > 0):
+                tweetStore.saveInfluencerM1Tweets(valid_tweets)
+            offset = offset + count
+            tweetStore.saveInfluencerTweetsOffset1000(offset)
+            print(str(len(valid_tweets))+" valid tweets have been added to database.")
+            print(valid_tweets)
+            valid_tweets = []
+            count = 0
+
+def get_valid_tweets_for_followers():
+    au_api = oauth_login()
+    valid_tweets = []
+    tweetStore = TweetStore()
+    limit = 100
+    offset = int(tweetStore.getInfluencerTweetsOffset2000())
+    followers_ids = tweetStore.getInfluencerFollowers()[offset:offset + limit]
+
+    count = 0
+    #followers_ids = {"189311978"}
+    for follower_id in followers_ids:
+        count = count + 1
+        user = get_user_info(au_api, str(follower_id['_id']))
+        name = user.screen_name
+
+        start_date = user.created_at
+        #start_date = datetime.now(pytz.utc) - timedelta(days=30)
+
+        # filter_tweets1: less time, filter tweets by matching substring in string
+        # filter_tweets2: more time, filter tweets by spliting string into words, then match
+        filter_tweets1(au_api, name, user.id, start_date, valid_tweets)
+
+        if count >= 1:
+            if(len(valid_tweets) > 0):
+                tweetStore.saveInfluencerM1Tweets(valid_tweets)
+            offset = offset + count
+            tweetStore.saveInfluencerTweetsOffset2000(offset)
+            print(str(len(valid_tweets))+" valid tweets have been added to database.")
+            print(valid_tweets)
+            valid_tweets = []
+            count = 0
 if __name__ == '__main__':
-    get_valid_tweets_for_followers()
+    # rahul and Peiyi
+    #get_valid_tweets_for_followers()
+
+    # Yuhui and Jiarui
+    #get_valid_tweets_for_followers1000()
+
+    # Kris and Tian
+    #get_valid_tweets_for_followers2000()
