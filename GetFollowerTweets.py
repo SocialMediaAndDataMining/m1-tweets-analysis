@@ -67,8 +67,9 @@ def filter_tweets1(auth_api, screen_name, userId, start_date, valid_tweets):
                 break
     except Exception as e:
         if(e.response.status_code == 429):
-            print("Too many request to twitter api. Try after 15 mins. After - ", str(datetime.now() + timedelta(minutes=15)))
-            exit()
+            print("Too many request to twitter api. Going to sleep and trying after 15 mins. After - ", str(datetime.now() + timedelta(minutes=15)))
+            sys.stderr.flush()
+            time.sleep(60*15 + 5)
         if hasattr(e, 'message'):
             print(e.message)
         else:
@@ -126,11 +127,4 @@ def get_valid_tweets_for_followers():
             count = 0
 
 if __name__ == '__main__':
-    '''
-    #name = "Edmundyu1995"
-    #userID = "189311978"
-    followers_ids=["189311978", "189311978"]
-    '''
-    # please enter a keyword in lowercase
-    htag = "apple"
     get_valid_tweets_for_followers()
