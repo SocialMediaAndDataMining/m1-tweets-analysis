@@ -75,7 +75,3 @@ time2 = time.perf_counter()
 plt.show()
 run_time = time2 - time1
 print('Run time using TextBlob: ', run_time)
-
-print(TweetStore.getAllM1Tweets())
-
-
