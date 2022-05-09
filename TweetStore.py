@@ -45,8 +45,8 @@ class TweetStore:
 
         for tweet in tweets:
             new_tweet = {
-                'user_screen_name': tweet['user']['screen_name'],
-                'user_id': tweet['user']['id'],
+                'user_screen_name': tweet['user_screen_name'],
+                'user_id': tweet['user_id'],
                 'text': tweet['text']
             }
             only_tweets.append(new_tweet)
