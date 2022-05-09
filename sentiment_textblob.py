@@ -18,20 +18,27 @@ def piechart(positive, neutral, negative, title):#set the pie chart
             autopct='%1.1f%%')
     plt.title(title)
 
-def sentiment_pie(df_text, title): #analysis the tweet and plot the result
+def sentiment_pie(data, title): #analysis the tweet and plot the result
     neg = 0
     pos = 0
     neu = 0
-    for text in df_text:
-        cleaned_text = p.clean(text)
+    results = []
+    for row in data:
+        cleaned_text = p.clean(row[2])
         sentiment = TextBlob(cleaned_text).sentiment
+
+        new_row = row
         if sentiment.subjectivity > 0.1:
             if sentiment.polarity > 0:
                 pos += 1
+                new_row.append('positive')
             elif sentiment.polarity == 0:
                 neu += 1
+                new_row.append('neutral')
             else:
                 neg += 1
+                new_row.append('negative')
+        results.append(new_row)
     piechart(pos, neu, neg, title)
 
 def read_csv_file(file_name, date_index): #Read csv file
@@ -63,13 +70,13 @@ def read_txt(txtfile):
     return df
 
 plt.rcParams['font.size'] = 10  #Set the font size for all plots
-test_df = read_csv_file('allM1Tweets.csv', 2)
+test_df = read_csv_file('influencerM1Tweets.csv', 2)
 df_text = []
 for i in test_df:
     df_text.append(i[2])
 fig = plt.figure()
 time1 = time.perf_counter()
-sentiment_pie(df_text, 'TextBlob')
+sentiment_pie(test_df, 'TextBlob')
 time2 = time.perf_counter()
 plt.show()
 run_time = time2 - time1
