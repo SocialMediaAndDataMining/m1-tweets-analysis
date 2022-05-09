@@ -13,10 +13,15 @@ import time
 
 
 def oauth_login():
-    CONSUMER_KEY = 'oTt0t3KtY5zyy31yLdVIOfPGD'
-    CONSUMER_SECRET = 'piplLdrjEXpchSH3yrFTLW0mfUcFclbMXK5UzFmvH0y1m9sp8b'
-    OAUTH_TOKEN = '963697391261175808-LlAzIBbtq0RQJ0OD59MKm3jgr6bYPnA'
-    OAUTH_TOKEN_SECRET = 'WAMTDcHrj6Y5nfu4GdprDaw5FJGITLM4tY7gA5UhthMKo'
+#     CONSUMER_KEY = 'oTt0t3KtY5zyy31yLdVIOfPGD'
+#     CONSUMER_SECRET = 'piplLdrjEXpchSH3yrFTLW0mfUcFclbMXK5UzFmvH0y1m9sp8b'
+#     OAUTH_TOKEN = '963697391261175808-LlAzIBbtq0RQJ0OD59MKm3jgr6bYPnA'
+#     OAUTH_TOKEN_SECRET = 'WAMTDcHrj6Y5nfu4GdprDaw5FJGITLM4tY7gA5UhthMKo'
+
+    CONSUMER_KEY = 'Nfwl7vJj6KhIutwHShaWxgQAp'
+    CONSUMER_SECRET = 'j89pWunk3rDLyIGVLm9l4RBQSeCYCiHwf8WuDzM3pl7IQgcNnW'
+    OAUTH_TOKEN = '1503575118831931394-K35j5nNpFpYlxV0CCIs9lfiILUeURE'
+    OAUTH_TOKEN_SECRET = 'IRUQxn3xBf3q4PkHZFAmB1MNRln0whIVlMwVB42DL11pr'
 
     auth = OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
@@ -198,4 +203,4 @@ if __name__ == '__main__':
     #get_valid_tweets_for_followers1000()
 
     # Kris and Tian
-    #get_valid_tweets_for_followers2000()
+    get_valid_tweets_for_followers2000()
